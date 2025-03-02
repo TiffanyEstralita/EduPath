@@ -12,42 +12,42 @@ class UserAuthentication
 		$this->conn = $db->getConnection();
 	}
 
-	public function registerUser($username, $email, $password)
+	public function registerUser($name, $email, $password)
 	{
 		// Hash the password
 		$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-		// Check if the username or email already exists
-		$query = "SELECT * FROM " . $this->table . " WHERE username = :username OR email = :email";
+		// Check if the name or email already exists
+		$query = "SELECT * FROM " . $this->table . " WHERE name = :name OR email = :email";
 		$stmt = $this->conn->prepare($query);
-		$stmt->bindParam(':username', $username);
+		$stmt->bindParam(':name', $name);
 		$stmt->bindParam(':email', $email);
 		$stmt->execute();
 
 		if ($stmt->rowCount() > 0) {
-			return false;  // Username or email already exists
+			return false;  // name or email already exists
 		}
 
 		// Insert the new user into the database
-		$query = "INSERT INTO " . $this->table . " (username, email, password, created_at) VALUES (:username, :email, :password, NOW())";
+		$query = "INSERT INTO " . $this->table . " (name, email, password, created_at) VALUES (:username, :email, :password, NOW())";
 		$stmt = $this->conn->prepare($query);
-		$stmt->bindParam(':username', $username);
+		$stmt->bindParam(':name', $name);
 		$stmt->bindParam(':email', $email);
 		$stmt->bindParam(':password', $hashedPassword);
 
 		return $stmt->execute();  // Returns true if successful
 	}
 
-	public function loginUser($usernameOrEmail, $password)
+	public function loginUser($nameOrEmail, $password)
 	{
-		// Check if username or email exists
-		$query = "SELECT * FROM " . $this->table . " WHERE username = :usernameOrEmail OR email = :usernameOrEmail";
+		// Check if name or email exists
+		$query = "SELECT * FROM " . $this->table . " WHERE name = :nameOrEmail OR email = :nameOrEmail";
 		$stmt = $this->conn->prepare($query);
-		$stmt->bindParam(':usernameOrEmail', $usernameOrEmail);
+		$stmt->bindParam(':nameOrEmail', $nameOrEmail);
 		$stmt->execute();
 
 		if ($stmt->rowCount() === 0) {
-			return false;  // Username/email doesn't exist
+			return false;  // name/email doesn't exist
 		}
 
 		$user = $stmt->fetch(PDO::FETCH_ASSOC);
