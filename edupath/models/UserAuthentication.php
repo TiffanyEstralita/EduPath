@@ -29,7 +29,7 @@ class UserAuthentication
 		}
 
 		// Insert the new user into the database
-		$query = "INSERT INTO " . $this->table . " (name, email, password, created_at) VALUES (:username, :email, :password, NOW())";
+		$query = "INSERT INTO " . $this->table . " (name, email, password, created_at) VALUES (:name, :email, :password, NOW())";
 		$stmt = $this->conn->prepare($query);
 		$stmt->bindParam(':name', $name);
 		$stmt->bindParam(':email', $email);
