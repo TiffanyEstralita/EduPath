@@ -1,0 +1,1 @@
+// display settings for delete account, sign out and enabling/disabling notifications
